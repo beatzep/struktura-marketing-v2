@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Farben ─────────────────────────────────────────── */
+  /* Standard-Textfarbe — Navy ist Links, Buttons und Akzenten vorbehalten */
+  --color-ink: #111111;
+
+  --color-navy: #0b3d91;
+  --color-navy-50: #e8f0fe;
+  --color-navy-100: #c5d9f9;
+  --color-navy-200: #8bb3f3;
+  --color-navy-400: #3d74cc;
+  --color-navy-600: #0b3d91;
+  --color-navy-700: #083275;
+  --color-navy-800: #072a66;
+  --color-navy-900: #041c44;
+  --color-navy-950: #021030;
+
+  --color-sand-50: #fafaf8;
+  --color-sand-100: #f5f5f0;
+  --color-sand-200: #eeeee6;
+  --color-sand-300: #e0e0d6;
+
+  /* ── Layout ─────────────────────────────────────────── */
+  --container-content: 1280px;
+  --container-narrow: 800px;
+  --container-wide: 1440px;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  /* ── Typografie ─────────────────────────────────────── */
+  --text-display: clamp(2.5rem, 5vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2rem, 4vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h2: clamp(1.5rem, 3vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.7;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-overline: 0.6875rem;
+  --text-overline--line-height: 1;
+  --text-overline--letter-spacing: 0.15em;
+}
+
+@theme inline {
+  --font-heading: var(--font-playfair), serif;
+  --font-body: var(--font-dm), sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-body text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-navy-100 text-ink;
+  }
+}
+
+@layer components {
+  .section {
+    @apply relative py-24 md:py-32 lg:py-40;
+    scroll-margin-top: 72px;
+  }
+
+  .overline-label {
+    @apply font-body text-overline font-medium uppercase;
+  }
+}
+
+/* ── Stop-Motion Reveal (Kern-Konzept) ─────────────────── */
+.sm-reveal {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sm-reveal.is-visible {
+    animation: sm-rise 0.4s steps(5, end) both;
+    animation-delay: var(--sm-delay, 0s);
+  }
+
+  @media (max-width: 640px) {
+    .sm-reveal.is-visible {
+      animation-timing-function: steps(3, end);
+    }
+  }
+
+  @keyframes sm-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Blueprint-Grid zeichnet sich ein */
+  .blueprint-grid {
+    opacity: 0;
+  }
+
+  .blueprint-grid.is-visible {
+    animation: grid-in 1.2s steps(8, end) both;
+  }
+
+  @keyframes grid-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Prozess-Verbindungslinie zeichnet sich von links nach rechts */
+  .process-track {
+    width: 0;
+  }
+
+  .process-track.is-visible {
+    animation: track-grow 0.8s linear forwards;
+  }
+
+  @keyframes track-grow {
+    to {
+      width: 66.66%;
+    }
+  }
+
+  /* Step-Kreise füllen sich nach ihrem Reveal */
+  .sm-reveal.is-visible .step-circle {
+    animation: circle-fill 0.3s steps(3, end) forwards;
+    animation-delay: calc(var(--sm-delay, 0s) + 0.6s);
+  }
+
+  @keyframes circle-fill {
+    to {
+      background-color: #0b3d91;
+      color: #ffffff;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .sm-reveal,
+  .blueprint-grid {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .process-track {
+    width: 66.66% !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
